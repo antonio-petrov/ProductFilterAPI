@@ -1,3 +1,9 @@
+
+If the "database" JSON expires - you can acccess a backup here:
+https://run.mocky.io/v3/cff21eb0-25a9-4594-bede-02f2de3fc435
+or you can use the database.json to create your own mocky.io and use it.
+
+
 # ProductFilterAPI
 .NET Core product filtering API. An interview task for a company
 
