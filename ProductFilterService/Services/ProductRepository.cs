@@ -28,7 +28,10 @@ namespace ProductFilterService.Services
 
             _logger.LogInformation("Mocky.io response content: {Content}", content);
 
-            return JsonSerializer.Deserialize<List<Product>>(content);
+            return JsonSerializer.Deserialize<List<Product>>(content, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
         }
     }
 }

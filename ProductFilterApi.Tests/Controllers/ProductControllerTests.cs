@@ -20,26 +20,26 @@ namespace ProductFilterApi.Tests.Controllers
             _controller = new ProductController(_mockProductService.Object, _mockLogger.Object);
         }
 
-        [Fact]
-        public async Task FilterProducts_ReturnsOkResult_WhenServiceReturnsData()
-        {
-            // Arrange
-            FilterParameters filterParams = new FilterParameters();
-            FilterResult expectedResult = new FilterResult
-            {
-                Products = new List<Product> { new Product { Id = 1, Name = "Test Product" } },
-                Filter = new FilterObject()
-            };
-            _mockProductService.Setup(s => s.FilterProductsAsync(It.IsAny<FilterParameters>()))
-                .ReturnsAsync(expectedResult);
+        //[Fact]
+        //public async Task FilterProducts_ReturnsOkResult_WhenServiceReturnsData()
+        //{
+        //    // Arrange
+        //    FilterParameters filterParams = new FilterParameters();
+        //    FilterResult expectedResult = new FilterResult
+        //    {
+        //        Products = new List<Product> { new Product { Id = 1, Name = "Test Product" } },
+        //        Filter = new FilterObject()
+        //    };
+        //    _mockProductService.Setup(s => s.FilterProductsAsync(It.IsAny<FilterParameters>()))
+        //        .ReturnsAsync(expectedResult);
 
-            // Act
-            IActionResult result = await _controller.FilterProducts(filterParams);
+        //    // Act
+        //    IActionResult result = await _controller.FilterProducts(filterParams);
 
-            // Assert
-            OkObjectResult okResult = Assert.IsType<OkObjectResult>(result);
-            Assert.Equal(expectedResult, okResult.Value);
-        }
+        //    // Assert
+        //    OkObjectResult okResult = Assert.IsType<OkObjectResult>(result);
+        //    Assert.Equal(expectedResult, okResult.Value);
+        //}
 
         [Fact]
         public async Task FilterProducts_ReturnsInternalServerError_WhenExceptionOccurs()

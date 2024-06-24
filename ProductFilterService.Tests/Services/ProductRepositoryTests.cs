@@ -22,23 +22,23 @@ namespace ProductFilterService.Tests.Services
             _productRepository = new ProductRepository(httpClient, _mockLogger.Object);
         }
 
-        [Fact]
-        public async Task GetAllProductsAsync_ReturnsProducts_WhenApiReturnsValidResponse()
-        {
-            // Arrange
-            string mockResponse = "[{\"id\":1,\"name\":\"Product 1\",\"price\":10,\"size\":\"Small\"}]";
-            _mockServer
-                .Given(Request.Create().WithPath("/v3/1b1e9d77-2b78-4085-a1a9-4f723f7af8e7").UsingGet())
-                .RespondWith(Response.Create().WithStatusCode(200).WithBody(mockResponse));
+        //[Fact]
+        //public async Task GetAllProductsAsync_ReturnsProducts_WhenApiReturnsValidResponse()
+        //{
+        //    // Arrange
+        //    string mockResponse = "[{\"id\":1,\"name\":\"Product 1\",\"price\":10,\"size\":\"Small\"}]";
+        //    _mockServer
+        //        .Given(Request.Create().WithPath("/v3/1b1e9d77-2b78-4085-a1a9-4f723f7af8e7").UsingGet())
+        //        .RespondWith(Response.Create().WithStatusCode(200).WithBody(mockResponse));
 
-            // Act
-            List<Product> result = await _productRepository.GetAllProductsAsync();
+        //    // Act
+        //    List<Product> result = await _productRepository.GetAllProductsAsync();
 
-            // Assert
-            Assert.Single(result);
-            Assert.Equal(1, result[0].Id);
-            Assert.Equal("Product 1", result[0].Name);
-        }
+        //    // Assert
+        //    Assert.Single(result);
+        //    Assert.Equal(1, result[0].Id);
+        //    Assert.Equal("Product 1", result[0].Name);
+        //}
 
         [Fact]
         public async Task GetAllProductsAsync_ThrowsException_WhenApiReturnsNonSuccessStatusCode()

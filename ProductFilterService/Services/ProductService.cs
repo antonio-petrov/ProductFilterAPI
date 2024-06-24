@@ -1,4 +1,4 @@
-﻿using ProductFilterService.Interfaces;
+using ProductFilterService.Interfaces;
 using ProductFilterService.Models;
 using System.Text.RegularExpressions;
 
@@ -31,7 +31,7 @@ namespace ProductFilterService.Services
 
             if (!string.IsNullOrWhiteSpace(filterParams.Size))
             {
-                filteredProducts = filteredProducts.Where(p => p.Size.Equals(filterParams.Size, StringComparison.OrdinalIgnoreCase));
+                filteredProducts = filteredProducts.Where(p => p.Sizes.Any(s => string.Equals(s, filterParams.Size, StringComparison.OrdinalIgnoreCase))).ToList();
             }
 
             // Highlight words in description
@@ -81,11 +81,13 @@ namespace ProductFilterService.Services
 
             decimal minPrice = products.Min(p => p.Price);
             decimal maxPrice = products.Max(p => p.Price);
-            List<string> sizes = products.Select(p => p.Size).Distinct().ToList();
+            List<string> sizes = products.SelectMany(p => p.Sizes).Distinct().ToList();
 
             List<string> commonWords = products
-                .SelectMany(p => p.Description.Split(' '))
-                .GroupBy(word => word.ToLower())
+                .SelectMany(p => p.Description.Split(new[] { ' ', ',', '.', '!', '?', ';', ':', '-', '(', ')', '[', ']', '{', '}' }, StringSplitOptions.RemoveEmptyEntries))
+                .Select(word => new string(word.Where(c => !char.IsPunctuation(c)).ToArray()).ToLower())
+                .Where(word => !string.IsNullOrWhiteSpace(word) && word.Length > 1)
+                .GroupBy(word => word)
                 .OrderByDescending(g => g.Count())
                 .Skip(5)  // Skip the 5 most common words
                 .Take(10) // Take the next 10 most common words
