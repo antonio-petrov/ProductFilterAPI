@@ -1,3 +1,4 @@
+using ProductFilterService.Constants;
 using ProductFilterService.Interfaces;
 using ProductFilterService.Services;
 
@@ -38,6 +39,10 @@ namespace ProductFilterApi
             services.AddHttpClient<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddSingleton<IAppConfig>(new AppConfig
+            {
+                DatabaseUrl = DatabaseConstants.DATABASE_URL
+            });
 
             services.AddLogging();
         }

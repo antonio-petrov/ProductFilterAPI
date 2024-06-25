@@ -17,7 +17,18 @@ namespace ProductFilterApi.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Filters and retrieves products based on specified criteria.
+        /// </summary>
+        /// <param name="filterParams">The filter parameters to apply.</param>
+        /// <returns>A filtered list of products and associated filter metadata.</returns>
+        /// <response code="200">Returns the filtered products and filter object.</response>
+        /// <response code="400">If the filter parameters are invalid.</response>
+        /// <response code="500">If there was an internal server error during processing.</response>
         [HttpGet("filter")]
+        [ProducesResponseType(typeof(FilterResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> FilterProducts([FromQuery] FilterParameters filterParams)
         {
             try

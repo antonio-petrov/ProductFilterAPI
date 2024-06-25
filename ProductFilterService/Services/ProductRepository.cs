@@ -10,28 +10,43 @@ namespace ProductFilterService.Services
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<ProductRepository> _logger;
+        private readonly IAppConfig _appConfig;
 
-        public ProductRepository(HttpClient httpClient, ILogger<ProductRepository> logger)
+        public ProductRepository(HttpClient httpClient, ILogger<ProductRepository> logger, IAppConfig appConfig)
         {
             _httpClient = httpClient;
             _logger = logger;
+            _appConfig = appConfig;
         }
 
         public async Task<List<Product>> GetAllProductsAsync()
         {
-            HttpResponseMessage response = await _httpClient.GetAsync(DatabaseConstants.DATABASE_URL);
-
-            _logger.LogInformation("Mocky.io response: {StatusCode}", response.StatusCode);
-
-            response.EnsureSuccessStatusCode();
-            string content = await response.Content.ReadAsStringAsync();
-
-            _logger.LogInformation("Mocky.io response content: {Content}", content);
-
-            return JsonSerializer.Deserialize<List<Product>>(content, new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true
-            });
+                HttpResponseMessage response = await _httpClient.GetAsync(_appConfig.DatabaseUrl);
+
+                _logger.LogInformation("Mocky.io response: {StatusCode}", response.StatusCode);
+
+                response.EnsureSuccessStatusCode();
+                string content = await response.Content.ReadAsStringAsync();
+
+                _logger.LogInformation("Mocky.io response content: {Content}", content);
+
+                return JsonSerializer.Deserialize<List<Product>>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching products");
+                throw;
+            }
+            catch (JsonException ex)
+            {
+                _logger.LogError(ex, "Error occurred while deserializing products");
+                throw;
+            }
         }
     }
 }
